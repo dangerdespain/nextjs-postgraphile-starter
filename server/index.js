@@ -6,6 +6,7 @@ const { SubscriptionServer } = require('subscriptions-transport-ws')
 const bodyParser = require('body-parser')
 const { execute, subscribe } = require('graphql')
 const  schema = require('./schema')
+const { session } = require('./session')
 
 const dev = process.env.NODE_ENV !== 'production'
 const app = next({dev})
@@ -36,6 +37,10 @@ app.prepare()
   }))
 
   server.use(graphiqlPath, graphiqlExpress(graphiqlOptions))
+
+  server.get('/sessionid', session, (req, res) => {
+    res.send(req.sessionID)
+  })
 
   server.get('*', (req, res) => {
     return handle(req, res)
