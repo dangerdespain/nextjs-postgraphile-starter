@@ -1,4 +1,4 @@
-const { AuthenticationError, UserInputError } = require('apollo-server-micro')
+import { AuthenticationError, UserInputError } from 'apollo-server-micro'
 
 const resolvers = {
   Query: {
@@ -12,4 +12,4 @@ const resolvers = {
   // Mutation: {},
 }
 
-module.exports = resolvers
+export default resolvers

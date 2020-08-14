@@ -1,12 +1,12 @@
-const express = require('express')
-const next = require('next')
-const { createServer } = require('http')
-const { graphqlExpress, graphiqlExpress } = require('graphql-server-express')
-const { SubscriptionServer } = require('subscriptions-transport-ws')
-const bodyParser = require('body-parser')
-const { execute, subscribe } = require('graphql')
-const  schema = require('./schema')
-const { session } = require('./session')
+import express from 'express'
+import next from 'next'
+import { createServer } from 'http'
+import { graphqlExpress, graphiqlExpress } from 'graphql-server-express'
+import { SubscriptionServer } from 'subscriptions-transport-ws'
+import bodyParser from 'body-parser'
+import { execute, subscribe } from 'graphql'
+import  schema from './schema'
+import { session } from './session'
 
 const dev = process.env.NODE_ENV !== 'production'
 const app = next({dev})
@@ -14,7 +14,7 @@ const handle = app.getRequestHandler()
 
 const graphqlPath = '/graphql'
 const graphiqlPath = '/graphiql'
-const graphqlOptions = {schema}
+const graphqlOptions = { schema }
 const subscriptionsPath = '/subscriptions'
 
 const graphiqlOptions = {
@@ -38,7 +38,7 @@ app.prepare()
 
   server.use(graphiqlPath, graphiqlExpress(graphiqlOptions))
 
-  server.get('/sessionid', session, (req, res) => {
+  server.get('/sessionid', session, (req: any, res) => {
     res.send(req.sessionID)
   })
 
@@ -46,20 +46,22 @@ app.prepare()
     return handle(req, res)
   })
 
-  httpServer.listen(3000, '0.0.0.0', (err) => {
-    if (err) throw err
+  httpServer.listen(3000, '0.0.0.0', 0, () => {
+    // if (err) throw err
     console.log('> ready on localhost:3000')
   })
 
+  const subscriptionOptions: any = {
+    schema,
+    execute,
+    subscribe,
+    onDisconnect () {
+      console.log('Client disconnected')
+    }
+  }
+
   new SubscriptionServer(
-    {
-      schema,
-      execute,
-      subscribe,
-      onDisconnect () {
-        console.log('Client disconnected')
-      }
-    },
+    subscriptionOptions,
     {
       server: httpServer, 
       path: subscriptionsPath
