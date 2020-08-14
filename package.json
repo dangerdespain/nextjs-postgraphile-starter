@@ -5,7 +5,7 @@
   "scripts": {
     "dev": "nodemon",
     "build": "next build",
-    "start": "NODE_ENV=production ts-node serverindex.js"
+    "start": "NODE_ENV=production ts-node --project tsconfig.server.json server/index.ts"
   },
   "dependencies": {
     "apollo-server": "^2.15.0",
@@ -29,6 +29,7 @@
     "babel-cli": "^6.24.1",
     "babel-preset-env": "^1.5.1",
     "babel-preset-next": "^1.4.0",
+    "nodemon": "^2.0.4",
     "typescript": "^3.9.5"
   }
 }
