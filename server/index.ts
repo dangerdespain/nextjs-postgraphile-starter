@@ -10,6 +10,26 @@ import { execute, subscribe } from 'graphql'
 import  schema from './schema'
 import { session } from './session'
 
+// import { responsePathAsArray } from "graphql";
+
+import { ApolloServer, gql } from 'apollo-server-micro'
+import resolvers from './resolvers'
+import typeDefs from './typeDefs'
+
+export const config = {
+  api: {
+    bodyParser: false,
+  },
+}
+
+// console.log(resolvers, typeDefs)
+
+const server = new ApolloServer({ typeDefs, resolvers });
+// server.listen().then(({ url }) => {
+//   console.log(`🚀  Server ready at ${url}`);
+// })
+
+export default server
 
 const dev = process.env.NODE_ENV !== 'production'
 const app = next({dev})
@@ -30,16 +50,16 @@ app.prepare()
   const server = express()
   const httpServer = createServer(server)
 
-  server.use(graphqlPath, bodyParser.json(), graphqlExpress(req => {
-    const query = req.query.query || req.body.query
-    if (query && query.length > 2000) {
-      throw new Error('Query too large.')
-    }
+  // server.use(graphqlPath, bodyParser.json(), graphqlExpress(req => {
+  //   const query = req.query.query || req.body.query
+  //   if (query && query.length > 2000) {
+  //     throw new Error('Query too large.')
+  //   }
 
-    return Object.assign({}, graphqlOptions)
-  }))
+  //   return Object.assign({}, graphqlOptions)
+  // }))
 
-  server.use(graphiqlPath, graphiqlExpress(graphiqlOptions))
+  // server.use(graphiqlPath, graphiqlExpress(graphiqlOptions))
 
   server.get('/sessionid', session, (req: any, res) => {
     res.send(req.sessionID)
