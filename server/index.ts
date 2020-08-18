@@ -1,3 +1,5 @@
+require('dotenv').config('../.env')
+
 import express from 'express'
 import next from 'next'
 import { createServer } from 'http'
@@ -7,6 +9,7 @@ import bodyParser from 'body-parser'
 import { execute, subscribe } from 'graphql'
 import  schema from './schema'
 import { session } from './session'
+
 
 const dev = process.env.NODE_ENV !== 'production'
 const app = next({dev})
